@@ -21,6 +21,12 @@ import java.nio.charset.Charset;
  */
 @Component
 public class RestAuthenticationEntryPoint implements ServerAuthenticationEntryPoint {
+    /**
+     *
+     * @param exchange 可用来暴露与http请求相关的属性
+     * @param e
+     * @return
+     */
     @Override
     public Mono<Void> commence(ServerWebExchange exchange, AuthenticationException e) {
         ServerHttpResponse response = exchange.getResponse();
