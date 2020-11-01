@@ -48,7 +48,7 @@ public class ResourceServerConfig {
         //自定义处理JWT请求头过期或签名错误的结果
         http.oauth2ResourceServer().authenticationEntryPoint(restAuthenticationEntryPoint);
         //对白名单路径，直接移除JWT请求头
-        //该过滤器被配置前 其他过滤器的前端，表示如果通过该过滤器检测，则该请求在过滤器层面被放行 SecurityWebFiltersOrder.AUTHENTICATION
+        //该过滤器被配置前 其他过滤器的前端，具体在filter调用链中的执行顺序由第二个参数 SecurityWebFiltersOrder.AUTHENTICATION 指定
         http.addFilterBefore(ignoreUrlsRemoveJwtFilter,SecurityWebFiltersOrder.AUTHENTICATION);
 
         //通过流式编程配置鉴权逻辑 具体看注释   AuthorizeExchangeSpec是用来配置鉴权规则的荷载
@@ -66,12 +66,18 @@ public class ResourceServerConfig {
 
     @Bean
     public Converter<Jwt, ? extends Mono<? extends AbstractAuthenticationToken>> jwtAuthenticationConverter() {
+        //从众多jwt中的属性中，提取出 权限内容
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        //AUTHORITY_PREFIX JWT存储权限前缀
         jwtGrantedAuthoritiesConverter.setAuthorityPrefix(AuthConstant.AUTHORITY_PREFIX);
+        // AUTHORITY_CLAIM_NAME JWT存储权限属性
         jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName(AuthConstant.AUTHORITY_CLAIM_NAME);
+        //将 Jwt 对象转换成 AbstractAuthenticationToken 对象
+        // JwtAuthenticationToken extends AbstractOAuth2TokenAuthenticationToken<Jwt>
+        //AbstractOAuth2TokenAuthenticationToken<T extends AbstractOAuth2Token> extends AbstractAuthenticationToken
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
-        //转换器  将Jwt 转换成 Mono
+        //转换器  将Jwt 转换成 Mono<AbstractAuthenticationToken>   Mono是一个泛型
         return new ReactiveJwtAuthenticationConverterAdapter(jwtAuthenticationConverter);
     }
 

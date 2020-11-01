@@ -18,8 +18,11 @@ public class GlobalCorsConfig {
     @Bean
     public CorsWebFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
+        //允许客户端使用哪些方法
         config.addAllowedMethod("*");
+        //允许客户端来自哪些源
         config.addAllowedOrigin("*");
+        //允许客户端使用哪些自定义header
         config.addAllowedHeader("*");
         config.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(new PathPatternParser());
