@@ -28,6 +28,8 @@ public class SecuritySecureConfig extends WebSecurityConfigurerAdapter {
                 //1.配置所有静态资源和登录页可以公开访问
                 .antMatchers(adminContextPath + "/assets/**").permitAll()
                 .antMatchers(adminContextPath + "/login").permitAll()
+                //return the object that is chained after creating the {@link RequestMatcher}
+                //返回RequestMatcher创建之后链接的对象。在这里即除了 RequestMatcher 标记后所有的链接
                 .anyRequest().authenticated()
                 .and()
                 //2.配置登录和登出路径

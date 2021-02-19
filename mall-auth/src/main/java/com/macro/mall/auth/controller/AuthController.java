@@ -32,6 +32,16 @@ public class AuthController {
     @Autowired
     private TokenEndpoint tokenEndpoint;
 
+    /**
+     * 这里的client_id 和 client_secret 都是在Oauth2ServerConfig中针对客户端所作的配置
+     * 这两个参数在对用户做 权限许可 时会用到（调用/oauth/token根据grant_type可进行三类授权许可）
+     *
+     * 这个接口是改写了springSecurity原来的获取token的接口
+     * @param principal
+     * @param parameters
+     * @return
+     * @throws HttpRequestMethodNotSupportedException
+     */
     @ApiOperation("Oauth2获取token")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "grant_type", value = "授权模式", required = true),
